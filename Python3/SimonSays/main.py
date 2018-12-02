@@ -6,10 +6,9 @@ import time
 # ======================
 
 COLORS = ['yellow','red','green','blue']
-YELLOW = COLORS.index('yellow')
-RED    = COLORS.index('red')
-GREEN  = COLORS.index('green')
-BLUE   = COLORS.index('blue')
+
+for color in COLORS:
+    globals()[color.upper()] = COLORS.index(color)
 
 BUTTON_SIZE = {'width':10,
                'height':5}
@@ -22,7 +21,7 @@ class color_button(tk.Button):
         kwargs['command'] = self._on_click
         kwargs['bg']      = COLORS[color]
         tk.Button.__init__(self, *args, **kwargs)
-        
+
         self._parent = parent
         self._color  = color
 
@@ -30,14 +29,14 @@ class color_button(tk.Button):
         self._parent.respostas.append(self._color)
 
 class button_line():
-    
+
     def __init__(self, frame):
         self._master = frame
         self._buttons = []
 
     def pack(self, **kwargs):
         self._master.pack(**kwargs)
-    
+
     def add_button(self, **kwargs):
         self._buttons.append(tk.Button(self._master, **kwargs))
 
@@ -48,7 +47,7 @@ class button_line():
         for button in self._buttons:
             yield button
 
-class button_holder():
+class button_matrix():
 
     def __init__(self, frame):
         self._master = frame
@@ -59,7 +58,7 @@ class button_holder():
         self._master.pack(**kwargs)
         self._top.pack(side = tk.TOP)
         self._bottom.pack(side = tk.TOP)
-        
+
     @property
     def top(self):
         return self._top
@@ -83,7 +82,7 @@ class simonsays():
                          'Continuar': self.cont_seq,
                          'Verificar': self.verify_seq}
 
-        self._buttons = button_holder(tk.Frame(master))
+        self._buttons = button_matrix(tk.Frame(master))
         self._buttons.pack(side = tk.LEFT)
 
         self._frame_right = tk.Frame(master)
@@ -127,19 +126,19 @@ class simonsays():
         self.gabarito = [random.randint(0,3) for i in range(2)]
         self.respostas = []
         self.show_seq()
-    
+
     def cont_seq(self):
         if self.verified:
             self.gabarito.append(random.randint(0,3))
             self.show_seq()
             self.respostas = []
             self.verified = False
-        
+
     def verify_seq(self):
         if self.respostas!=self.gabarito:
             self.respostas = []
         else:
-            self.verified = True        
+            self.verified = True
 
 
 # Main
